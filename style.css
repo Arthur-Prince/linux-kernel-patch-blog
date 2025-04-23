@@ -34,7 +34,7 @@ summary {
   background: #eef2f6;
 }
 summary h1,
-summary h2 { font-size: 1.2rem; font-weight: 600; color: #005f9e; }
+summary h2,h3 { font-size: 1.2rem; font-weight: 600; color: #005f9e; }
 
 /* ícone de “ver mais” */
 summary::after {
@@ -51,7 +51,7 @@ details.subpost > div {
   padding: 1rem 1.3rem 1.4rem;
 }
 
-h3 { font-size: 1rem; margin: 1rem 0 0.4rem; color: #005f9e; }
+h4 { font-size: 1rem; margin: 1rem 0 0.4rem; color: #005f9e; }
 p   { margin-bottom: 0.9rem; text-align: justify; }
 ul  { list-style: disc inside; margin: 0 0 0.9rem 1rem; }
 

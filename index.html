@@ -10,10 +10,13 @@
 <body>
     <main class="container">
 
+        <h1 style="text-align: center;">Desenvolvimento de Software Livre</h1>
+        <h2 style="text-align: center;">Contribuindo para o kernel do linux</h2>
+
         <!-- ====== POST: Introdução ====== -->
         <details class="post" open>
             <summary>
-                <h1>1 · Introdução</h1>
+                <h2>1 · Introdução</h2>
             </summary>
             <div class="content">
                 <p>
@@ -29,14 +32,14 @@
         <!-- ====== POST: Tutorial ====== -->
         <details class="post" open>
             <summary>
-                <h1>2 · Tutorial</h1>
+                <h2>2 · Tutorial do FLUSP</h2>
             </summary>
             <div class="content">
 
                 <!-- 2.1 -->
                 <details class="subpost">
                     <summary>
-                        <h2>2.1 · Setting up a test environment (QEMU + libvirt)</h2>
+                        <h3>2.1 · Setting up a test environment (QEMU + libvirt)</h3>
                     </summary>
                     <div>
                         <p>
@@ -48,7 +51,7 @@
                             problemas críticos caso ocorram erros(como aconteceu comigo).
                         </p>
 
-                        <h3>Aprendizado</h3>
+                        <h4>Aprendizado</h4>
                         <ul>
                             <li>
                                 Aprendi a configurar uma máquina virtual no Linux usando QEMU, que é o emulador de
@@ -70,7 +73,7 @@
                             </li>
                         </ul>
 
-                        <h3>Dificuldades</h3>
+                        <h4>Dificuldades</h4>
                         <p>
                             Enfrentei dificuldades em notar detalhes importantes nos comandos apresentados, o que se
                             repetiu em tutoriais subsequentes. Muitas vezes, eu deixava de adaptar corretamente os
@@ -89,7 +92,7 @@
                 <!-- 2.2 -->
                 <details class="subpost">
                     <summary>
-                        <h2>2.2 · Building and booting a custom Linux kernel for ARM</h2>
+                        <h3>2.2 · Building and booting a custom Linux kernel for ARM</h3>
                     </summary>
                     <div>
                         <p>
@@ -97,7 +100,7 @@
                             código e transferir os módulos compilados para o kernel da máquina virtual.
                         </p>
 
-                        <h3>Aprendizado</h3>
+                        <h4>Aprendizado</h4>
                         <ul>
                             <li>
                                 O Linux é composto por diversas árvores que cuidam de diferentes subsistemas do kernel,
@@ -117,7 +120,7 @@
                             </li>
                         </ul>
 
-                        <h3>Dificuldades</h3>
+                        <h4>Dificuldades</h4>
                         <p>
                             Durante a configuração do build do kernel, encontrei problemas ao executar o
                             <code>localmodconfig</code>: em vez de utilizar o arquivo de configuração que eu havia
@@ -139,7 +142,7 @@
                 <!-- 2.3 -->
                 <details class="subpost">
                     <summary>
-                        <h2>2.3 · Kernel build configuration & modules</h2>
+                        <h3>2.3 · Kernel build configuration & modules</h3>
                     </summary>
                     <div>
                         <p>
@@ -147,7 +150,7 @@
                             do kernel Linux na VM.
                         </p>
 
-                        <h3>Aprendizado</h3>
+                        <h4>Aprendizado</h4>
                         <ul>
                             <li>
                                 Aprendi a criar um arquivo em C destinado a ser um módulo do kernel. Inicialmente, o
@@ -175,14 +178,14 @@
                 <!-- 2.4 -->
                 <details class="subpost">
                     <summary>
-                        <h2>2.4 · Character Device Drivers</h2>
+                        <h3>2.4 · Character Device Drivers</h3>
                     </summary>
                     <div>
                         <p>
                             Este tutorial tem uma abordagem teórica, explicando como os dispositivos interagem entre si.
                             Em seguida, é realizada uma demonstração prática dessa comunicação por meio de arquivos.
                         </p>
-                        <h3>Aprendizado</h3>
+                        <h4>Aprendizado</h4>
                         <p>
                             Os dispositivos de caractere no Linux fornecem uma interface baseada em arquivos para a
                             troca sequencial de poucos bytes de dados entre o espaço do usuário e componentes de
@@ -203,7 +206,7 @@
                 <!-- 2.5 -->
                 <details class="subpost">
                     <summary>
-                        <h2>2.5 · Sending patches by e-mail com git</h2>
+                        <h3>2.5 · Sending patches by e-mail com git</h3>
                     </summary>
                     <div>
                         <p>
@@ -220,7 +223,7 @@
         <!-- ====== POST: Contribuição ====== -->
         <details class="post">
             <summary>
-                <h1>3 · Contribuição</h1>
+                <h2>3 · Contribuição</h2>
             </summary>
             <div class="content">
                 <p>
