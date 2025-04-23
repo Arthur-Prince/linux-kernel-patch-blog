@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Contribuindo para o Kernel Linux — Relato de Experiência</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <main class="container">
+
+    <article>
+      <h1>Introdução</h1>
+      <p>
+        Este artigo relata a experiência e o aprendizado adquiridos ao contribuir
+        para o kernel Linux. Nele, abordo as dificuldades enfrentadas e o que foi
+        aprendido durante o tutorial do Flusp, até alcançar o estágio de
+        contribuir para o kernel e enviar o patch por e-mail, além de apresentar
+        o feedback recebido.
+      </p>
+    </article>
+
+    <section>
+      <h1>Tutorial</h1>
+
+      <h2>2.1&nbsp;· Setting up a test environment for Linux Kernel Dev using QEMU and libvirt</h2>
+      <p>
+        Neste tutorial, aprendi como instalar e configurar uma máquina virtual
+        para o desenvolvimento do kernel Linux, utilizando QEMU e libvirt. A
+        utilização de uma máquina virtual é particularmente vantajosa, pois
+        permite testar modificações e carregar módulos com a necessidade de
+        recompilar e reiniciar o kernel sem precisar fechar todas as aplicações
+        no sistema hospedeiro. Além disso, o uso de VMs protege o estado do
+        computador, evitando problemas críticos caso ocorram erros (como
+        aconteceu comigo).
+      </p>
+
+      <h3>Aprendizado</h3>
+      <ul>
+        <li>
+          Aprendi a configurar uma máquina virtual no Linux usando QEMU, que é o
+          emulador de hardware, e libvirt, que facilita a interação com o QEMU.
+          O tutorial emulou uma máquina ARM64 em uma arquitetura x86.
+        </li>
+        <li>
+          Foi empregado um script para carregar variáveis de ambiente que inicia
+          um novo shell Bash a cada execução. Sempre que o arquivo de
+          configuração é modificado, é necessário reiniciar o shell para que as
+          alterações entrem em vigor.
+        </li>
+        <li>
+          O tutorial mostrou como baixar a imagem Linux e ajustar a partição para
+          carregar os módulos do kernel corretamente, permitindo operar a VM via
+          <abbr title="Secure Shell">SSH</abbr>.
+        </li>
+      </ul>
+
+      <h3>Dificuldades</h3>
+      <p>
+        Enfrentei dificuldades em notar detalhes importantes nos comandos
+        apresentados. Muitas vezes, eu deixava de adaptar corretamente os
+        parâmetros (&lt;rootfs&gt;, &lt;kernel&gt;, &lt;initrd&gt;) ou os
+        esquecia. Definir esses nomes e o IP do SSH como variáveis de ambiente
+        facilitaria o processo. Além disso, tive problemas na configuração do
+        SSH, pois o tutorial não informava que seria necessário executar um
+        <code>apt update</code> ou instalar o servidor SSH dentro da VM.
+      </p>
+
+      <h2>2.2&nbsp;· Building and booting a custom Linux kernel for ARM</h2>
+      <p>
+        Este tutorial ensina como clonar o repositório do kernel Linux, compilar
+        essa árvore de código e transferir os módulos compilados para a VM.
+      </p>
+
+      <h3>Aprendizado</h3>
+      <ul>
+        <li>
+          O Linux é composto por diversas árvores que cuidam de diferentes
+          subsistemas, com o kernel principal sob a supervisão de Linus Torvalds.
+        </li>
+        <li>
+          Clonamos a árvore do <abbr title="Industrial I/O">IIO</abbr> com todas
+          as <em>branches</em>, definimos as configurações de build, compilamos o
+          kernel e instalamos os módulos na VM.
+        </li>
+        <li>
+          Como meu sistema é x86 e a VM usa ARM64, o tutorial também abordou o
+          uso de <em>cross compiler</em>.
+        </li>
+      </ul>
+
+      <h3>Dificuldades</h3>
+      <p>
+        Ao executar <code>localmodconfig</code>, o comando usava a configuração
+        do kernel do meu sistema, não a preparada para a VM. A solução foi
+        executar <code>scp root@&lt;VM-IP&gt;:~/vm_mod_list "$IIO_TREE"</code>
+        duas vezes. Também ocorreu uma troca de identificador do
+        <code>rootfs</code> de <code>sdax</code> para <code>vdax</code>, não
+        explicada no tutorial.
+      </p>
+
+      <h2>2.3&nbsp;· Introduction to Linux kernel build configuration and modules</h2>
+      <p>
+        Este tutorial ensina na prática como criar, compilar e executar um módulo
+        do kernel Linux na VM.
+      </p>
+
+      <h3>Aprendizado</h3>
+      <ul>
+        <li>Criei um arquivo C com a estrutura básica de um módulo.</li>
+        <li>
+          Configurei o módulo nos arquivos <code>Kconfig</code> e o marquei como
+          <em>module</em> no <code>menuconfig</code>.
+        </li>
+        <li>
+          Compilei o kernel, instalei o módulo na VM e o carreguei via
+          <code>insmod</code>. Também vi como lidar com dependências entre
+          módulos.
+        </li>
+      </ul>
+
+      <h2>2.4&nbsp;· Introduction to Linux kernel Character Device Drivers</h2>
+      <p>
+        Este tutorial combina teoria e prática para explicar a comunicação entre
+        dispositivos de caractere via arquivos.
+      </p>
+
+      <h3>Aprendizado</h3>
+      <ul>
+        <li>
+          Dispositivos de caractere fornecem uma interface baseada em arquivos
+          para troca sequencial de poucos bytes entre espaço de usuário e
+          hardware/software.
+        </li>
+        <li>
+          Cada dispositivo é identificado por um número maior (driver) e um
+          menor (instância).
+        </li>
+        <li>
+          O exemplo <code>simple_char</code> demonstra os métodos
+          <code>open</code>, <code>read</code>, <code>write</code> e
+          <code>release</code>, testados com <code>mknod</code> e pequenos
+          programas em C.
+        </li>
+      </ul>
+
+      <h2>2.5&nbsp;· Sending patches by email with git</h2>
+      <p>
+        Tutorial prático sobre como enviar um patch aos mantenedores do
+        kernel Linux usando git. Mostra o envio por e-mail contendo mensagem de
+        commit e diff, além das possibilidades de contribuição.
+      </p>
+    </section>
+
+    <section>
+      <h1>Contribuição</h1>
+      <p>
+        Implementei o uso de <code>iio_device_claim_direct()</code> para proteger
+        a captura de dados bufferizados contra operações de leitura/escrita em
+        registradores. O subsistema IIO define modos de acesso diretos e
+        bufferizados; como muitos dispositivos não operam em ambos
+        simultaneamente, bloquear o dispositivo durante operações críticas evita
+        corrupção de dados. Após a configuração, libero com
+        <code>iio_device_release_direct()</code>, garantindo integridade.
+      </p>
+
+      <img
+        src="./img/patch1.jpeg"
+        alt="iio_device_claim_direct()"
+        class="img-center"
+      />
+
+      <p>
+        Durante o desenvolvimento, o módulo dependia de outro não declarado em
+        <code>Kconfig</code>. Compilar o kernel inteiro quebrou a VM; após
+        rever os tutoriais, adicionei a dependência ao <code>Kconfig</code> e,
+        por fim, enviei o patch por e-mail conforme o tutorial.
+      </p>
+      <img
+        src="./img/patch2.jpeg"
+        alt="iio_device_claim_direct()"
+        class="img-center"
+      />
+
+    </section>
+
+  </main>
+</body>
+</html>
