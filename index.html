@@ -27,14 +27,14 @@
         </details>
 
         <!-- ====== POST: Tutorial ====== -->
-        <details class="post">
+        <details class="post" open>
             <summary>
                 <h1>2 · Tutorial</h1>
             </summary>
             <div class="content">
 
                 <!-- 2.1 -->
-                <details class="subpost" open>
+                <details class="subpost">
                     <summary>
                         <h2>2.1 · Setting up a test environment (QEMU + libvirt)</h2>
                     </summary>
@@ -77,8 +77,8 @@
                             parâmetros &lt;rootfs&gt;, &lt;kernel&gt; e &lt;initrd&gt; ou simplesmente os esquecia.
                             Acredito que definir esses nomes e o IP do SSH como variáveis de ambiente facilitaria muito
                             o processo, simplificando a repetição do tutorial. Além disso, tive problemas na
-                            configuração do SSH, pois o tutorial não informava que seria necessário executar um apt-get
-                            update ou instalar o SSH (através de apt install ssh) dentro da máquina virtual para que o
+                            configuração do SSH, pois o tutorial não informava que seria necessário executar <code>apt-get
+                            update</code> ou instalar o SSH (através de apt install ssh) dentro da máquina virtual para que o
                             serviço funcionasse corretamente.
 
                         </p>
