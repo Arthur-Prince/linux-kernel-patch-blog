@@ -29,7 +29,7 @@
         </details>
 
         <!-- ====== POST: Tutorial ====== -->
-        <details class="post" open>
+        <details class="post">
             <summary>
                 <h2>2 · Tutorial do FLUSP</h2>
             </summary>
@@ -278,6 +278,148 @@
             </div>
         </details>
 
+
+        <details class="post">
+            <summary>
+              <h2>4 · Feedback</h2>
+            </summary>
+            <div class="content">
+              <p>Email enviado para Jonathan Cameron &lt;jic23@kernel.org&gt;</p>
+          
+              <!-- Cover-letter -->
+              <details class="subpost">
+                <summary>
+                  <h3>4.1 · [PATCH 0/2] Cover-letter</h3>
+                </summary>
+                <div>
+                  <pre><code>These patch improves the ti-ads1298 driver in two ways:
+          
+1- Safe usage guarantee for device communication
+  Wrap calls to ads1298_reg_access() and ads1298_write_raw()
+  with iio_device_claim_direct() / iio_device_release_direct()
+  so that configuration operations cannot interrupt an ongoing
+  buffered capture.
+
+2- Add kfifo dependency for module compilation 
+  The driver now selects CONFIG_IIO_KFIFO_BUFFER in its Kconfig,
+  just like other IIO ADC drivers, to ensure the kfifo buffer
+  API is available when building ti-ads1298 as a module.
+
+    Arthur-Prince (2):
+ iio: adc: ti-ads1298
+ iio: adc: Kconfig
+
+drivers/iio/adc/Kconfig      |  1 +
+drivers/iio/adc/ti-ads1298.c | 25 +++++++++++++++++++++----
+2 files changed, 22 insertions(+), 4 deletions(-)</code></pre>
+                </div>
+              </details>
+          
+              <!-- Patch 1/2 -->
+              <details class="subpost">
+                <summary>
+                  <h3>4.2 · [PATCH 1/2] iio: adc: ti-ads1298: Add safe usage guarantee for device communication</h3>
+                </summary>
+                <div>
+         <pre><code>
+Add safe usage guarantee for device communication in 
+ads1298_reg_access/ ads1298_write_raw (ti-ads1298) that 
+prevent simultaneous read/write operations.
+ 
+ Signed-off-by: Arthur-Prince &lt;r2.arthur.prince@gmail.com&gt;
+ Co-developed-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+ Signed-off-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+ ---
+  drivers/iio/adc/ti-ads1298.c | 25 +++++++++++++++++++++----
+  1 file changed, 21 insertions(+), 4 deletions(-)
+ 
+ diff --git a/drivers/iio/adc/ti-ads1298.c b/drivers/iio/adc/ti-ads1298.c
+ index 03f762415fa5..438bcc3c74da 100644
+ --- a/drivers/iio/adc/ti-ads1298.c
+ +++ b/drivers/iio/adc/ti-ads1298.c
+ @@ -355,9 +355,19 @@ static int ads1298_write_raw(struct iio_dev *indio_dev,
+  {
+         struct ads1298_private *priv = iio_priv(indio_dev);
+ 
+ +       int ret;
+ +
+         switch (mask) {
+         case IIO_CHAN_INFO_SAMP_FREQ:
+ -               return ads1298_set_samp_freq(priv, val);
+ +               ret = iio_device_claim_direct_mode(indio_dev);
+ +               if (ret)
+ +                       return ret;
+ +
+ +               ret = ads1298_set_samp_freq(priv, val);
+ +
+ +               iio_device_release_direct_mode(indio_dev);
+ +
+ +               return ret;
+         default:
+                 return -EINVAL;
+         }
+ @@ -417,10 +427,17 @@ static int ads1298_reg_access(struct iio_dev *indio_dev, unsigned int reg,
+  {
+         struct ads1298_private *priv = iio_priv(indio_dev);
+ 
+ +       int ret;
+ +       ret = iio_device_claim_direct_mode(indio_dev);
+ +       if (ret)
+ +               return ret;
+         if (readval)
+ -               return regmap_read(priv->regmap, reg, readval);
+ -
+ -       return regmap_write(priv->regmap, reg, writeval);
+ +               ret = regmap_read(priv->regmap, reg, readval);
+ +       else
+ +               ret = regmap_write(priv->regmap, reg, writeval);
+ +       
+ +       iio_device_release_direct_mode(indio_dev);
+ +       return ret;
+  }
+ 
+  static void ads1298_rdata_unmark_busy(struct ads1298_private *priv)</code></pre>
+       </div>
+     </details>
+ 
+     <!-- Patch 2/2 -->
+              <details class="subpost">
+                <summary>
+                  <h3>4.3 · [PATCH 2/2] iio: adc: Kconfig: add kfifo dependency to fix module build</h3>
+                </summary>
+                <div>
+                  <pre><code>
+Add dependency to Kconfig’s ti-ads1298 because compiling it as a module
+failed with an undefined kfifo symbol. Building the full kernel passed
+since kfifo was enabled globally. Selecting IIO_KFIFO_BUFFER in 
+ti-ads1298’s Kconfig, as done by other IIO ADC drivers, now ensures kfifo
+buffer support is included for module builds.
+
+Signed-off-by: Arthur-Prince &lt;r2.arthur.prince@gmail.com&gt;
+Co-developed-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+Signed-off-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+---
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 849c90203071..513f2238fdee 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -1492,6 +1492,7 @@ config TI_ADS1298
+        tristate "Texas Instruments ADS1298"
+        depends on SPI
+        select IIO_BUFFER
++       select IIO_KFIFO_BUF
+        help
+          If you say yes here you get support for Texas Instruments ADS1298
+          medical ADC chips</code></pre>
+                </div>
+              </details>
+          
+            </div>
+          </details>
+          
     </main>
 </body>
 
