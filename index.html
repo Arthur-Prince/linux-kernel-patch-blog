@@ -23,7 +23,7 @@
                     Neste artigo, compartilho minha experiência e os conhecimentos adquiridos ao contribuir para o
                     kernel Linux. Relato as principais dificuldades enfrentadas e os aprendizados extraídos durante o
                     tutorial do Flusp, desde a configuração inicial até o envio do patch por e-mail aos mantenedores,
-                    além de apresentar o feedback recebido. O trabalho foi realizado em conjunto com minha dupla, 
+                    além de apresentar o feedback recebido. O trabalho foi realizado em conjunto com minha dupla,
                     Mariana Valério, e comigo, Arthur Prince.
                 </p>
             </div>
@@ -282,18 +282,18 @@
 
         <details class="post">
             <summary>
-              <h2>4 · Feedback</h2>
+                <h2>4 · Feedback</h2>
             </summary>
             <div class="content">
-              <p>Email enviado para Jonathan Cameron &lt;jic23@kernel.org&gt;</p>
-          
-              <!-- Cover-letter -->
-              <details class="subpost">
-                <summary>
-                  <h3>4.1 · [PATCH 0/2] Cover-letter</h3>
-                </summary>
-                <div>
-                  <pre><code>These patch improves the ti-ads1298 driver in two ways:
+                <p>Email enviado para Jonathan Cameron &lt;jic23@kernel.org&gt; e &lt;linux-iio@vger.kernel.org&gt;</p>
+
+                <!-- Cover-letter -->
+                <details class="subpost">
+                    <summary>
+                        <h3>4.1 · [PATCH 0/2] Cover-letter</h3>
+                    </summary>
+                    <div>
+                        <pre><code>These patches improve the ti-ads1298 driver in two ways:
           
 1- Safe usage guarantee for device communication
   Wrap calls to ads1298_reg_access() and ads1298_write_raw()
@@ -313,16 +313,17 @@
 drivers/iio/adc/Kconfig      |  1 +
 drivers/iio/adc/ti-ads1298.c | 25 +++++++++++++++++++++----
 2 files changed, 22 insertions(+), 4 deletions(-)</code></pre>
-                </div>
-              </details>
-          
-              <!-- Patch 1/2 -->
-              <details class="subpost">
-                <summary>
-                  <h3>4.2 · [PATCH 1/2] iio: adc: ti-ads1298: Add safe usage guarantee for device communication</h3>
-                </summary>
-                <div>
-         <pre><code>
+                    </div>
+                </details>
+
+                <!-- Patch 1/2 -->
+                <details class="subpost">
+                    <summary>
+                        <h3>4.2 · [PATCH 1/2] iio: adc: ti-ads1298: Add safe usage guarantee for device communication
+                        </h3>
+                    </summary>
+                    <div>
+                        <pre><code>
 Add safe usage guarantee for device communication in 
 ads1298_reg_access/ ads1298_write_raw (ti-ads1298) that 
 prevent simultaneous read/write operations.
@@ -380,16 +381,16 @@ prevent simultaneous read/write operations.
   }
  
   static void ads1298_rdata_unmark_busy(struct ads1298_private *priv)</code></pre>
-       </div>
-     </details>
- 
-     <!-- Patch 2/2 -->
-              <details class="subpost">
-                <summary>
-                  <h3>4.3 · [PATCH 2/2] iio: adc: Kconfig: add kfifo dependency to fix module build</h3>
-                </summary>
-                <div>
-                  <pre><code>
+                    </div>
+                </details>
+
+                <!-- Patch 2/2 -->
+                <details class="subpost">
+                    <summary>
+                        <h3>4.3 · [PATCH 2/2] iio: adc: Kconfig: add kfifo dependency to fix module build</h3>
+                    </summary>
+                    <div>
+                        <pre><code>
 Add dependency to Kconfig’s ti-ads1298 because compiling it as a module
 failed with an undefined kfifo symbol. Building the full kernel passed
 since kfifo was enabled globally. Selecting IIO_KFIFO_BUFFER in 
@@ -415,12 +416,100 @@ index 849c90203071..513f2238fdee 100644
         help
           If you say yes here you get support for Texas Instruments ADS1298
           medical ADC chips</code></pre>
-                </div>
-              </details>
-          
+                    </div>
+                </details>
+
+                <details class="subpost">
+                    <summary>
+                        <h3>4.4 · Resposta</h3>
+                    </summary>
+                    <div>
+                        O mantenedor recusou o primeiro patch, questionando a necessidade de proteger chamadas de configuração durante o modo buffered; para o segundo patch, solicitou apenas a inclusão da tag “Fixes”, considerando o restante adequado.
+                    </div>
+                </details>
+
+                <details class="subpost">
+                    <summary>
+                        <h3>4.5 · Desfecho</h3>
+                    </summary>
+                    <div>
+                        Não seguimos adiante com o primeiro patch. No segundo, incluí a linha  
+                        <code>Fixes: 00ef7708fa6 ("iio: adc: ti-ads1298: Add driver")</code>  
+                        — inicialmente coloquei essa tag no assunto do e-mail, achando que fosse o lugar certo, até descobrir que ela deve ficar no corpo da mensagem. Enviei o e-mail com o “Fixes” no título também, e o mantenedor confirmou que aplicará o patch com a tag no local adequado.
+
+                        <pre><code>
+Add dependency to Kconfig’s ti-ads1298 because compiling it as a module
+failed with an undefined kfifo symbol.
+
+Fixes: 00ef7708fa6 ("iio: adc: ti-ads1298: Add driver")
+Signed-off-by: Arthur-Prince &lt;r2.arthur.prince@gmail.com&gt;
+Co-developed-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+Signed-off-by: Mariana Valério &lt;mariana.valerio2@hotmail.com&gt;
+---
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 849c90203071..513f2238fdee 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -1492,6 +1492,7 @@ config TI_ADS1298
+     tristate "Texas Instruments ADS1298"
+     depends on SPI
+     select IIO_BUFFER
++	select IIO_KFIFO_BUF
+     help
+       If you say yes here you get support for Texas Instruments ADS1298
+       medical ADC chips
+                        </code></pre>
+                        
+                    </div>
+                </details>
+                
+                
+
             </div>
-          </details>
-          
+        </details>
+
+        <!--
+          comandos:
+git send-email --annotate \
+  --from="r2.arthur.prince@gmail.com" \
+  --to="linux-iio@vger.kernel.org" \
+  --cc="arthur.prince@ime.usp.br" \
+  --cc="jic23@kernel.org" \
+  -1
+
+  git commit --signoff \
+  --trailer='Co-developed-by: Mariana Valério <mariana.valerio2@hotmail.com>' \
+  --trailer='Signed-off-by: Mariana Valério <mariana.valerio2@hotmail.com>' \
+  -m "iio: adc: Kconfig: fix undefined kfifo symbol in ti-ads1298 module build"
+
+        -->
+
+
+        <details class="post">
+            <summary>
+                <h2>5 · Contribuindo para o kw</h2>
+            </summary>
+            <div class="content">
+                Nesta sessão, apresento o processo de contribuição para o kernelWorkflow(kw). O objetivo é compartilhar a experiência adquirida e os desafios enfrentados durante essa jornada.
+
+                <details class="subpost">
+                    <summary>
+                        <h3>5.1 · Contribuição</h3>
+                    </summary>
+                    <div>
+                        Para o projeto <em>kw</em>, nossa contribuição inicial consiste em uma refatoração do script <code>setup.sh</code>. Durante a revisão do repositório no GitHub, percebemos que a maioria das issues abertas envolve novas funcionalidades ou tarefas complexas para iniciantes, mas faltam melhorias de manutenção de código.  
+                        
+                        Como ponto de partida, identificamos no <code>setup.sh</code> duas variáveis distintas que armazenam exatamente o mesmo valor, indicando duplicação desnecessária. Nosso objetivo, neste estágio preliminar, é eliminar essas redundâncias e aumentar a clareza do script.  
+                    </div>
+                </details>
+                
+            </div>
+        </details>
+
+
     </main>
 </body>
 
