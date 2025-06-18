@@ -10,6 +10,33 @@ body {
 }
 .container { max-width: 820px; margin: 2.5rem auto; padding: 0 1rem 4rem; }
 
+main {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* Cada emoji “caindo” */
+.rain-emoji {
+  z-index: 0;
+  position: absolute;
+  top: -2rem;             /* começa acima do viewport */
+  font-size: 1.5rem;
+  pointer-events: none;   /* não interfere em cliques */
+  user-select: none;
+  animation-name: drop;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* keyframes da queda */
+@keyframes drop {
+  to {
+    transform: translateY(500vh) rotate(1080deg);
+  }
+}
+
+
 /* -------- Posts / cabeçalhos -------- */
 details.post,
 details.subpost {
@@ -98,6 +125,6 @@ code {
   to   { transform: rotate(360deg); }
 }
 @keyframes colorShift {
-  from { color: #27ae60; }
+  from { color: red; }
   to   { color: #2980b9; }
 }
