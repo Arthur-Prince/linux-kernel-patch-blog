@@ -68,3 +68,36 @@ code {
   display: block;
   border-radius: 6px;
 }
+
+
+.message {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  position: relative;
+  animation: colorShift 3s infinite alternate;
+}
+
+.emojis {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.emoji {
+  display: inline-block;
+  margin: 0.2rem;
+  font-size: 2rem;
+  /* agora usamos apenas a animação de spin contínuo */
+  animation: spin linear infinite;
+  /* duração base — você pode também variar via JS como antes */
+  animation-duration: 1s;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes colorShift {
+  from { color: #27ae60; }
+  to   { color: #2980b9; }
+}

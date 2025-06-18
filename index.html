@@ -424,7 +424,9 @@ index 849c90203071..513f2238fdee 100644
                         <h3>4.4 · Resposta</h3>
                     </summary>
                     <div>
-                        O mantenedor recusou o primeiro patch, questionando a necessidade de proteger chamadas de configuração durante o modo buffered; para o segundo patch, solicitou apenas a inclusão da tag “Fixes”, considerando o restante adequado.
+                        O mantenedor recusou o primeiro patch, questionando a necessidade de proteger chamadas de
+                        configuração durante o modo buffered; para o segundo patch, solicitou apenas a inclusão da tag
+                        “Fixes”, considerando o restante adequado.
                     </div>
                 </details>
 
@@ -433,9 +435,11 @@ index 849c90203071..513f2238fdee 100644
                         <h3>4.5 · Desfecho</h3>
                     </summary>
                     <div>
-                        Não seguimos adiante com o primeiro patch. No segundo, incluí a linha  
-                        <code>Fixes: 00ef7708fa6 ("iio: adc: ti-ads1298: Add driver")</code>  
-                        — inicialmente coloquei essa tag no assunto do e-mail, achando que fosse o lugar certo, até descobrir que ela deve ficar no corpo da mensagem. Enviei o e-mail com o “Fixes” no título também, e o mantenedor confirmou que aplicará o patch com a tag no local adequado.
+                        Não seguimos adiante com o primeiro patch. No segundo, incluí a linha
+                        <code>Fixes: 00ef7708fa6 ("iio: adc: ti-ads1298: Add driver")</code>
+                        — inicialmente coloquei essa tag no assunto do e-mail, achando que fosse o lugar certo, até
+                        descobrir que ela deve ficar no corpo da mensagem. Enviei o e-mail com o “Fixes” no título
+                        também, e o mantenedor confirmou que aplicará o patch com a tag no local adequado.
 
                         <pre><code>
 Add dependency to Kconfig’s ti-ads1298 because compiling it as a module
@@ -462,11 +466,11 @@ index 849c90203071..513f2238fdee 100644
        If you say yes here you get support for Texas Instruments ADS1298
        medical ADC chips
                         </code></pre>
-                        
+
                     </div>
                 </details>
-                
-                
+
+
 
             </div>
         </details>
@@ -493,24 +497,119 @@ git send-email --annotate \
                 <h2>5 · Contribuindo para o kw</h2>
             </summary>
             <div class="content">
-                Nesta sessão, apresento o processo de contribuição para o kernelWorkflow(kw). O objetivo é compartilhar a experiência adquirida e os desafios enfrentados durante essa jornada.
+                Nesta sessão, apresento o processo de contribuição para o kernelWorkflow(kw). O objetivo é compartilhar
+                a experiência adquirida e os desafios enfrentados durante essa jornada.
 
                 <details class="subpost">
                     <summary>
-                        <h3>5.1 · Contribuição</h3>
+                        <h3>5.1 · Contribuição 1</h3>
                     </summary>
                     <div>
-                        Para o projeto <em>kw</em>, nossa contribuição inicial consiste em uma refatoração do script <code>setup.sh</code>. Durante a revisão do repositório no GitHub, percebemos que a maioria das issues abertas envolve novas funcionalidades ou tarefas complexas para iniciantes, mas faltam melhorias de manutenção de código.  
-                        
-                        Como ponto de partida, identificamos no <code>setup.sh</code> duas variáveis distintas que armazenam exatamente o mesmo valor, indicando duplicação desnecessária. Nosso objetivo, neste estágio preliminar, é eliminar essas redundâncias e aumentar a clareza do script.  
+                        Para o projeto <em>kw</em>, nossa contribuição inicial consiste em uma refatoração do script
+                        <code>setup.sh</code>. Durante a revisão do repositório no GitHub, percebemos que a maioria das
+                        issues abertas envolve novas funcionalidades ou tarefas complexas para iniciantes, mas faltam
+                        melhorias de manutenção de código.
+
+                        Como ponto de partida, identificamos no <code>setup.sh</code> duas variáveis distintas que
+                        armazenam exatamente o mesmo valor, indicando duplicação desnecessária. Nosso objetivo, neste
+                        estágio preliminar, é eliminar essas redundâncias e aumentar a clareza do script.
+                        segue a imagem do patch:
+                        <img src="./img/kw_patch1.png" alt="kw patch" class="img-center" />
                     </div>
                 </details>
-                
+
+                <details class="subpost">
+                    <summary>
+                        <h3>5.2 · Feedback 1</h3>
+                    </summary>
+                    <div>
+                        <div class="message">
+                            O patch foi aceito<span class="emoji">🎉</span>
+                        </div>
+
+                        <img src="./img/patch_accepted_kw.png" alt="kw feedback" class="img-center" />
+                    </div>
+                </details>
+
+                <details class="subpost">
+                    <summary>
+                        <h3>5.3 · Contribuição 2</h3>
+                    </summary>
+                    <div>
+                        Para encontrar uma contribuição para o meu segundo patch, percorri o código em busca de um
+                        TODO que eu pudesse implementar. Identifiquei uma possível melhoria, mas, para testá-la,
+                        precisei de acesso via SSH e a um container. A ideia de testar essa mudança me levou a rodar a
+                        suíte de testes unitários, e um deles falhou justamente por exigir o shell fish — algo
+                        que eu estava tentando com bash.
+
+                        Percebendo que não havia teste equivalente para bash, decidi criá-lo e implementei
+
+                        (1) Um novo script de autocomplete para bash, espelhando a lógica do teste de fish (mesmas
+                        permissões e estrutura dos métodos).
+
+                        (2) Um caso de teste em bash_autocomplete_test.sh que gera as opções esperadas, ordena-as e
+                        compara
+                        com o resultado real do comando kw.
+
+                        segue a imagem do patch
+                        <img src="./img/kw_patch2.png" alt="kw patch" class="img-center" />
+                    </div>
+                </details>
+
             </div>
+        </details>
+
+        <details class="post">
+            <summary>
+                <h2>6 · Contribuição para o debian</h2>
+            </summary>
+
+            <div class="content">
+                <h2>Contribuição ao Debian</h2>
+                <p>
+                    Iniciamos a preparação da VM seguindo o Tutorial 1, mas usando a imagem <strong>amd64</strong>.
+                    Subimos a máquina com <em>QEMU</em> integrada ao <em>libvirt</em> sem nenhum erro e, buscando uma
+                    solução mais leve, reduzimos o disco para <strong>2 GB</strong>.
+                    Em seguida, configuramos o sistema exatamente como os desenvolvedores Debian haviam orientado.
+                </p>
+                <p>No dia de fazer a contribuição:</p>
+                <ol>
+                    <li>Escolhemos o pacote <code>devtodo</code> e seguimos à risca as diretrizes do Debian Dev.</li>
+                    <li>Criamos o patch e fizemos o commit no repositório.</li>
+                    <li>Ao rodar os testes, a imagem de <strong>2 GB</strong> esgotou a memória e a build do
+                        <code>devtodo</code> falhou.</li>
+                </ol>
+                <p>
+                    Felizmente, o monitor <strong>David</strong> nos auxiliou: aumentamos a VM para <strong>7 GB</strong>
+                    de memória,
+                    o teste passou com sucesso e enviamos o <em>merge request</em> finalizado.
+                </p>
+            </div>
+
+            <div class="message">
+                <div class="emojis">
+                    O patch foi aceito
+                    <!-- Adicione quantos emojis quiser -->
+                    <span class="emoji">🎉</span>
+                    <span class="emoji">🎊</span>
+                    <span class="emoji">✨</span>
+                    <span class="emoji">🎈</span>
+                    <span class="emoji">🥳</span>
+                    <span class="emoji">🎂</span>
+                    <span class="emoji">🍾</span>
+                    <span class="emoji">🪅</span>
+                  </div>
+            </div>
+
+            <img src="./img/patch_debian.png" alt="kw feedback" class="img-center" />
+
         </details>
 
 
     </main>
+
+    
 </body>
+
 
 </html>
